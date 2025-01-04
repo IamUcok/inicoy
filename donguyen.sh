@@ -91,9 +91,9 @@ apt-get update && apt-get install -y ntfs-3g
 # Periksa apakah file adalah .img atau .gz
 if [[ "$PILIHOS" == *.img ]]; then
     wget -O /root/os.img --no-check-certificate "$PILIHOS"
-    dd if=/root/os.img of=/dev/vda bs=3M status=progress
+    dd if=/root/os.img of=/dev/vda
 else
-    wget -O- --no-check-certificate "$PILIHOS" | gunzip -c | dd of=/dev/vda bs=3M status=progress
+    wget -O- --no-check-certificate "$PILIHOS" | gunzip -c | dd of=/dev/vda
 fi
 
 mount.ntfs-3g /dev/vda2 /mnt
