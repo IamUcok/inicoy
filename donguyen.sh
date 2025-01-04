@@ -91,11 +91,4 @@ EOF
 
 wget -O- --no-check-certificate $PILIHOS | gunzip | dd of=/dev/vda bs=3M status=progress
 
-mount.ntfs-3g /dev/vda2 /mnt
-cd "/mnt/ProgramData/Microsoft/Windows/Start Menu/Programs/"
-cd Start* || cd start*; \
-wget https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B56B184C5-E038-C0F3-FF06-583A6F5F6BA5%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-statsdef_1%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe
-cp -f /tmp/net.bat net.bat
-cp -f /tmp/dpart.bat dpart.bat
-
 echo "reboot Rdp dulu mazzeh baru bisa pake"
