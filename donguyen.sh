@@ -15,7 +15,7 @@ case "$PILIHOS" in
     2) PILIHOS="https://file.nixpoin.com/windows2016.gz";;
     3) PILIHOS="https://file.nixpoin.com/windows2012v2.gz";;
     4) PILIHOS="https://file.nixpoin.com/win10.gz";;
-    5) read -p "[?] Masukkan Link GZ mu : " PILIHOS;;
+    5) read -p "[?] Masukkan Link file OS Anda (img/gz): " PILIHOS;;
     *) echo "[!] Pilihan salah"; exit;;
 esac
 
@@ -87,7 +87,14 @@ exit
 EOF
 
 apt-get update && apt-get install -y ntfs-3g
-wget -O- --no-check-certificate $PILIHOS | gunzip -c | dd of=/dev/vda bs=3M status=progress
+
+# Periksa apakah file adalah .img atau .gz
+if [[ "$PILIHOS" == *.img ]]; then
+    wget -O /tmp/os.img --no-check-certificate "$PILIHOS"
+    dd if=/tmp/os.img of=/dev/vda bs=3M status=progress
+else
+    wget -O- --no-check-certificate "$PILIHOS" | gunzip -c | dd of=/dev/vda bs=3M status=progress
+fi
 
 mount.ntfs-3g /dev/vda2 /mnt
 cd "/mnt/ProgramData/Microsoft/Windows/Start Menu/Programs/" || cd "/mnt/ProgramData/microsoft/windows/start menu/programs/"
