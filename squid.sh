@@ -6,14 +6,14 @@ echo "===> Membuat direktori konfigurasi..."
 mkdir -p ~/squid-docker/{conf,passwords}
 cd ~/squid-docker
 
-echo "===> Install apache2-utils (htpasswd)..."
+echo "===> Install apache2-utils dan docker-compose..."
 sudo apt update
 sudo apt install -y apache2-utils docker-compose
 
 echo "===> Membuat user 'omyoh' dengan password 'cupubanget'..."
 htpasswd -cb passwords/squid_passwd omyoh cupubanget
 
-echo "===> Membuat file squid.conf agar hanya bisa diakses dari luar, bukan localhost, dan harus autentikasi..."
+echo "===> Membuat file konfigurasi squid.conf..."
 cat <<EOF > conf/squid.conf
 auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/squid_passwd
 auth_param basic realm Squid Proxy Auth
@@ -34,7 +34,7 @@ http_access deny all
 
 http_port 3128
 
-# Disable caching
+# Nonaktifkan caching
 cache deny all
 cache_mem 0 MB
 maximum_object_size 0 KB
@@ -44,7 +44,7 @@ cache_dir null /tmp
 access_log /var/log/squid/access.log
 EOF
 
-echo "===> Membuat file docker-compose.yml dengan file descriptor 65536..."
+echo "===> Membuat file docker-compose.yml..."
 cat <<EOF > docker-compose.yml
 version: '3.8'
 
@@ -68,14 +68,13 @@ volumes:
   squid-logs:
 EOF
 
-echo "===> Menjalankan squid proxy container..."
-docker compose down || true
-docker compose up -d
+echo "===> Menjalankan Squid proxy container..."
+docker-compose down || true
+docker-compose up -d
 
-# Dapatkan IP lokal untuk URL proxy
+# Ambil IP lokal untuk akses proxy
 IP_ADDRESS=$(hostname -I | awk '{print $1}')
 
-# Tampilkan URL Proxy yang bisa digunakan
-echo "✅ Selesai! Squid berjalan di port 3128 tanpa cache dan dengan file descriptor 65536."
-echo "URL proxy yang dapat digunakan:"
+echo "✅ Selesai! Squid berjalan di port 3128 tanpa cache dan dengan autentikasi."
+echo "Gunakan proxy dengan URL:"
 echo "http://omyoh:cupubanget@$IP_ADDRESS:3128"
