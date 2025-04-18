@@ -43,6 +43,7 @@ acl authenticated proxy_auth REQUIRED
 http_access allow authenticated
 
 http_port $PORT
+http_port 0.0.0.0:3128
 
 access_log /var/log/squid/access.log
 cache_log /var/log/squid/cache.log
@@ -86,16 +87,6 @@ loading_animation $!
 # === CEK LIMIT FILE DESCRIPTOR ===
 echo "[+] Limit file descriptor saat ini:"
 cat /proc/$(pidof squid)/limits | grep "Max open files"
-
-# === ENABLE & KONFIGURASI FIREWALL (UFW) ===
-if command -v ufw > /dev/null; then
-    if ! sudo ufw status | grep -q "Status: active"; then
-        echo "[+] UFW belum aktif, mengaktifkan..."
-        echo "y" | sudo ufw enable
-    fi
-    echo "[+] Mengizinkan semua koneksi melalui UFW..."
-    sudo ufw allow from any to any comment "Allow all traffic (custom rule)"
-fi
 
 # === SIMPAN & TAMPILKAN HASIL ===
 HASIL="http://$USERNAME:$PASSWORD@$PUBLIC_IP:$PORT"
