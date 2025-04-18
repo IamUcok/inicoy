@@ -40,9 +40,10 @@ sudo tee "$SQUID_CONF" > /dev/null <<EOF
 auth_param basic program /usr/lib/squid/basic_ncsa_auth $PASSWD_FILE
 auth_param basic realm Private Proxy
 acl authenticated proxy_auth REQUIRED
+acl localhost src
+http_access deny localhost
 http_access allow authenticated
 
-http_port $PORT
 http_port 0.0.0.0:3128
 
 access_log /var/log/squid/access.log
@@ -50,7 +51,6 @@ cache_log /var/log/squid/cache.log
 cache_store_log none
 logfile_rotate 0
 buffered_logs on
-dns_v4_first on
 EOF
 
 # === SET LIMIT FILE DESCRIPTOR SYSTEMD ===
