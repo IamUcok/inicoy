@@ -38,7 +38,7 @@ acl authenticated proxy_auth REQUIRED
 http_access allow authenticated
 
 http_port $PORT
-tcp_outgoing_address $PUBLIC_IP
+#tcp_outgoing_address $PUBLIC_IP
 
 access_log /var/log/squid/access.log
 cache_log /var/log/squid/cache.log
