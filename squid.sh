@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # === KONFIGURASI ===
-INTERFACE="eth0"
 PORT=3128
 USERNAME="vodkaace"
 PASSWORD="indonesia"
@@ -9,13 +8,21 @@ PASSWD_FILE="/etc/squid/passwd"
 SQUID_CONF="/etc/squid/squid.conf"
 HASIL_FILE="hasil.txt"
 
-# === AMBIL IP DARI INTERFACE ===
-IP=$(ip -4 addr show $INTERFACE | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -n 1)
-if [ -z "$IP" ]; then
-    echo "[!] Tidak bisa mendapatkan IP dari interface $INTERFACE"
+# === DAPATKAN IP PUBLIK ===
+PUBLIC_IP=$(curl -s ifconfig.me)
+if [ -z "$PUBLIC_IP" ]; then
+    echo "[!] Gagal mendapatkan IP publik."
     exit 1
 fi
-echo "[+] IP yang digunakan: $IP"
+echo "[+] IP publik yang didapat: $PUBLIC_IP"
+
+# === CARI IP DI INTERFACE LOKAL ===
+INTERFACE=$(ip -4 addr show | grep -B 1 "$PUBLIC_IP" | head -n 1 | awk '{print $2}' | sed 's/://')
+if [ -z "$INTERFACE" ]; then
+    echo "[!] Tidak dapat menemukan interface dengan IP $PUBLIC_IP."
+    exit 1
+fi
+echo "[+] IP publik $PUBLIC_IP ditemukan pada interface: $INTERFACE"
 
 # === INSTALL PAKET ===
 sudo apt update
@@ -39,7 +46,7 @@ acl authenticated proxy_auth REQUIRED
 http_access allow authenticated
 
 http_port $PORT
-tcp_outgoing_address $IP
+tcp_outgoing_address $PUBLIC_IP
 
 access_log /var/log/squid/access.log
 cache_log /var/log/squid/cache.log
@@ -84,13 +91,13 @@ echo "Cek limit file descriptor Squid:"
 cat /proc/$(pidof squid)/limits | grep "Max open files"
 
 # === SIMPAN HASIL ===
-HASIL="http://$USERNAME:$PASSWORD@$IP:$PORT"
+HASIL="http://$USERNAME:$PASSWORD@$PUBLIC_IP:$PORT"
 echo "$HASIL" > "$HASIL_FILE"
 
 # === OUTPUT KONFIGURASI PALING BAWAH ===
 echo ""
-echo "✅ Setup selesai! Proxy siap digunakan."
-echo "📄 Hasil disimpan di: $HASIL_FILE"
+echo "? Setup selesai! Proxy siap digunakan."
+echo "?? Hasil disimpan di: $HASIL_FILE"
 echo ""
 echo "[+] Konfigurasi selesai. Berikut detail proxy kamu:"
 echo "$HASIL"
