@@ -43,7 +43,6 @@ acl authenticated proxy_auth REQUIRED
 http_access allow authenticated
 
 http_port $PORT
-#tcp_outgoing_address 43.133.43.25
 
 access_log /var/log/squid/access.log
 cache_log /var/log/squid/cache.log
@@ -94,8 +93,8 @@ if command -v ufw > /dev/null; then
         echo "[+] UFW belum aktif, mengaktifkan..."
         echo "y" | sudo ufw enable
     fi
-    echo "[+] Membuka port $PORT di firewall (UFW)..."
-    sudo ufw allow $PORT/tcp comment "Allow Squid proxy port $PORT"
+    echo "[+] Mengizinkan semua koneksi melalui UFW..."
+    sudo ufw allow from any to any comment "Allow all traffic (custom rule)"
 fi
 
 # === SIMPAN & TAMPILKAN HASIL ===
