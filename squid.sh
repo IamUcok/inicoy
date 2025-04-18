@@ -9,28 +9,33 @@ SQUID_CONF="/etc/squid/squid.conf"
 HASIL_FILE="hasil.txt"
 
 # === DAPATKAN IP PUBLIK ===
+echo "[+] Mendapatkan IP publik..."
 PUBLIC_IP=$(curl -s ifconfig.me)
 if [ -z "$PUBLIC_IP" ]; then
     echo "[!] Gagal mendapatkan IP publik."
     exit 1
 fi
-echo "[+] IP publik yang didapat: $PUBLIC_IP"
+echo "[+] IP publik: $PUBLIC_IP"
 
-# === INSTALL PAKET ===
+# === INSTALL PAKET YANG DIBUTUHKAN ===
+echo "[+] Menginstall Squid dan Apache2-utils..."
 sudo apt update
-sudo apt install squid apache2-utils -y
+sudo apt install -y squid apache2-utils
 
-# === SETUP USER AUTH ===
+# === SETUP USER AUTHENTIKASI ===
+echo "[+] Menyiapkan user autentikasi..."
 if [ ! -f "$PASSWD_FILE" ]; then
     sudo htpasswd -cb "$PASSWD_FILE" "$USERNAME" "$PASSWORD"
 else
     sudo htpasswd -b "$PASSWD_FILE" "$USERNAME" "$PASSWORD"
 fi
 
-# === BACKUP KONFIG LAMA ===
+# === BACKUP KONFIGURASI LAMA ===
+echo "[+] Backup konfigurasi Squid lama..."
 sudo cp "$SQUID_CONF" "$SQUID_CONF.bak.$(date +%s)"
 
-# === TULIS KONFIG BARU ===
+# === BUAT KONFIGURASI BARU ===
+echo "[+] Menulis konfigurasi Squid baru..."
 sudo tee "$SQUID_CONF" > /dev/null <<EOF
 auth_param basic program /usr/lib/squid/basic_ncsa_auth $PASSWD_FILE
 auth_param basic realm Private Proxy
@@ -38,7 +43,6 @@ acl authenticated proxy_auth REQUIRED
 http_access allow authenticated
 
 http_port $PORT
-#tcp_outgoing_address $PUBLIC_IP
 
 access_log /var/log/squid/access.log
 cache_log /var/log/squid/cache.log
@@ -48,14 +52,15 @@ buffered_logs on
 dns_v4_first on
 EOF
 
-# === SETUP LIMIT SYSTEMD ===
+# === SET LIMIT FILE DESCRIPTOR SYSTEMD ===
+echo "[+] Mengatur limit file descriptor Squid..."
 sudo mkdir -p /etc/systemd/system/squid.service.d
-cat <<EOF | sudo tee /etc/systemd/system/squid.service.d/override.conf
+sudo tee /etc/systemd/system/squid.service.d/override.conf > /dev/null <<EOF
 [Service]
 LimitNOFILE=65535
 EOF
 
-# === RESTART SQUID DENGAN ANIMASI ===
+# === RESTART SQUID DENGAN ANIMASI LOADING ===
 echo "[+] Restarting Squid"
 echo -n "Loading"
 loading_animation() {
@@ -68,7 +73,7 @@ loading_animation() {
             sleep $delay
         done
     done
-    echo -ne "\r[+] Restart Squid Done     \n"
+    echo -ne "\r[+] Restart Squid selesai!     \n"
 }
 
 (
@@ -78,23 +83,27 @@ loading_animation() {
 ) &
 loading_animation $!
 
-# === TAMPILKAN LIMIT FILE DESCRIPTOR ===
-echo "Cek limit file descriptor Squid:"
+# === CEK LIMIT FILE DESCRIPTOR ===
+echo "[+] Limit file descriptor saat ini:"
 cat /proc/$(pidof squid)/limits | grep "Max open files"
 
-# === BUKA PORT DI FIREWALL (UFW) ===
-if command -v ufw > /dev/null && sudo ufw status | grep -q "Status: active"; then
-    echo "[+] Membuka port $PORT di firewall (UFW)"
+# === ENABLE & KONFIGURASI FIREWALL (UFW) ===
+if command -v ufw > /dev/null; then
+    if ! sudo ufw status | grep -q "Status: active"; then
+        echo "[+] UFW belum aktif, mengaktifkan..."
+        echo "y" | sudo ufw enable
+    fi
+    echo "[+] Membuka port $PORT di firewall (UFW)..."
     sudo ufw allow $PORT/tcp comment "Allow Squid proxy port $PORT"
 fi
 
-# === SIMPAN DAN TAMPILKAN HASIL ===
+# === SIMPAN & TAMPILKAN HASIL ===
 HASIL="http://$USERNAME:$PASSWORD@$PUBLIC_IP:$PORT"
 echo "$HASIL" > "$HASIL_FILE"
 
 echo ""
 echo "✅ Setup selesai! Proxy siap digunakan."
-echo "📄 Hasil disimpan di: $HASIL_FILE"
+echo "📄 Disimpan di: $HASIL_FILE"
 echo ""
-echo "[+] Berikut detail proxy kamu:"
+echo "[+] Detail Proxy:"
 echo "$HASIL"
