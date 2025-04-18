@@ -6,9 +6,9 @@ echo "===> Membuat direktori konfigurasi..."
 mkdir -p ~/squid-docker/{conf,passwords}
 cd ~/squid-docker
 
-echo "===> Install apache2-utils dan docker-compose..."
+echo "===> Install apache2-utils, curl, dan docker-compose..."
 sudo apt update
-sudo apt install -y apache2-utils docker-compose
+sudo apt install -y apache2-utils docker-compose curl
 
 echo "===> Membuat user 'omyoh' dengan password 'cupubanget'..."
 htpasswd -cb passwords/squid_passwd omyoh cupubanget
@@ -22,17 +22,13 @@ auth_param basic realm Squid Proxy Auth
 acl authenticated proxy_auth REQUIRED
 http_access allow authenticated
 
-# Menolak akses dari localhost
-acl localhost src 127.0.0.1
-http_access deny localhost
-
-# Mengizinkan akses dari semua IP (selain localhost), tetapi harus terautentikasi
+# Mengizinkan akses dari semua IP (terautentikasi)
 http_access allow all
 
 # Menolak semua akses lainnya
 http_access deny all
 
-http_port 3128
+http_port 0.0.0.0:3128
 
 # Nonaktifkan caching
 cache deny all
@@ -72,9 +68,9 @@ echo "===> Menjalankan Squid proxy container..."
 docker-compose down || true
 docker-compose up -d
 
-# Ambil IP lokal untuk akses proxy
-IP_ADDRESS=$(hostname -I | awk '{print $1}')
+# Ambil IP publik
+IP_ADDRESS=$(curl -s ifconfig.me)
 
-echo "✅ Selesai! Squid berjalan di port 3128 tanpa cache dan dengan autentikasi."
-echo "Gunakan proxy dengan URL:"
+echo "✅ Selesai! Squid proxy aktif dengan autentikasi dan tanpa caching."
+echo "Gunakan URL berikut untuk proxy:"
 echo "http://omyoh:cupubanget@$IP_ADDRESS:3128"
