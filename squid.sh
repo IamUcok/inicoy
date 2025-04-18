@@ -1,100 +1,81 @@
 #!/bin/bash
 
-# === KONFIGURASI ===
-PORT=3128
-USERNAME="vodkaace"
-PASSWORD="indonesia"
-PASSWD_FILE="/etc/squid/passwd"
-SQUID_CONF="/etc/squid/squid.conf"
-HASIL_FILE="hasil.txt"
+set -e
 
-# === DAPATKAN IP PUBLIK ===
-echo "[+] Mendapatkan IP publik..."
-PUBLIC_IP=$(curl -s ifconfig.me)
-if [ -z "$PUBLIC_IP" ]; then
-    echo "[!] Gagal mendapatkan IP publik."
-    exit 1
-fi
-echo "[+] IP publik: $PUBLIC_IP"
+echo "===> Membuat direktori konfigurasi..."
+mkdir -p ~/squid-docker/{conf,passwords}
+cd ~/squid-docker
 
-# === INSTALL PAKET YANG DIBUTUHKAN ===
-echo "[+] Menginstall Squid dan Apache2-utils..."
+echo "===> Install apache2-utils (htpasswd)..."
 sudo apt update
-sudo apt install -y squid apache2-utils
+sudo apt install -y apache2-utils docker-compose
 
-# === SETUP USER AUTHENTIKASI ===
-echo "[+] Menyiapkan user autentikasi..."
-if [ ! -f "$PASSWD_FILE" ]; then
-    sudo htpasswd -cb "$PASSWD_FILE" "$USERNAME" "$PASSWORD"
-else
-    sudo htpasswd -b "$PASSWD_FILE" "$USERNAME" "$PASSWORD"
-fi
+echo "===> Membuat user 'omyoh' dengan password 'cupubanget'..."
+htpasswd -cb passwords/squid_passwd omyoh cupubanget
 
-# === BACKUP KONFIGURASI LAMA ===
-echo "[+] Backup konfigurasi Squid lama..."
-sudo cp "$SQUID_CONF" "$SQUID_CONF.bak.$(date +%s)"
+echo "===> Membuat file squid.conf agar hanya bisa diakses dari luar, bukan localhost, dan harus autentikasi..."
+cat <<EOF > conf/squid.conf
+auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/squid_passwd
+auth_param basic realm Squid Proxy Auth
 
-# === BUAT KONFIGURASI BARU ===
-echo "[+] Menulis konfigurasi Squid baru..."
-sudo tee "$SQUID_CONF" > /dev/null <<EOF
-auth_param basic program /usr/lib/squid/basic_ncsa_auth $PASSWD_FILE
-auth_param basic realm Private Proxy
+# ACL untuk autentikasi
 acl authenticated proxy_auth REQUIRED
-acl localhost src
-http_access deny localhost
 http_access allow authenticated
 
-http_port 0.0.0.0:3128
+# Menolak akses dari localhost
+acl localhost src 127.0.0.1
+http_access deny localhost
+
+# Mengizinkan akses dari semua IP (selain localhost), tetapi harus terautentikasi
+http_access allow all
+
+# Menolak semua akses lainnya
+http_access deny all
+
+http_port 3128
+
+# Disable caching
+cache deny all
+cache_mem 0 MB
+maximum_object_size 0 KB
+maximum_object_size_in_memory 0 KB
+cache_dir null /tmp
 
 access_log /var/log/squid/access.log
-cache_log /var/log/squid/cache.log
-cache_store_log none
-logfile_rotate 0
-buffered_logs on
 EOF
 
-# === SET LIMIT FILE DESCRIPTOR SYSTEMD ===
-echo "[+] Mengatur limit file descriptor Squid..."
-sudo mkdir -p /etc/systemd/system/squid.service.d
-sudo tee /etc/systemd/system/squid.service.d/override.conf > /dev/null <<EOF
-[Service]
-LimitNOFILE=65535
+echo "===> Membuat file docker-compose.yml dengan file descriptor 65536..."
+cat <<EOF > docker-compose.yml
+version: '3.8'
+
+services:
+  squid:
+    image: sameersbn/squid:latest
+    container_name: squid-auth
+    restart: always
+    ports:
+      - "3128:3128"
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ./conf/squid.conf:/etc/squid/squid.conf
+      - ./passwords/squid_passwd:/etc/squid/squid_passwd
+      - squid-logs:/var/log/squid
+
+volumes:
+  squid-logs:
 EOF
 
-# === RESTART SQUID DENGAN ANIMASI LOADING ===
-echo "[+] Restarting Squid"
-echo -n "Loading"
-loading_animation() {
-    local pid=$1
-    local delay=0.1
-    local spin='|/-\'
-    while ps -p $pid > /dev/null; do
-        for i in $(seq 0 3); do
-            echo -ne "\rLoading ${spin:$i:1}"
-            sleep $delay
-        done
-    done
-    echo -ne "\r[+] Restart Squid selesai!     \n"
-}
+echo "===> Menjalankan squid proxy container..."
+docker compose down || true
+docker compose up -d
 
-(
-    sudo systemctl daemon-reexec
-    sudo systemctl daemon-reload
-    sudo systemctl restart squid
-) &
-loading_animation $!
+# Dapatkan IP lokal untuk URL proxy
+IP_ADDRESS=$(hostname -I | awk '{print $1}')
 
-# === CEK LIMIT FILE DESCRIPTOR ===
-echo "[+] Limit file descriptor saat ini:"
-cat /proc/$(pidof squid)/limits | grep "Max open files"
-
-# === SIMPAN & TAMPILKAN HASIL ===
-HASIL="http://$USERNAME:$PASSWORD@$PUBLIC_IP:$PORT"
-echo "$HASIL" > "$HASIL_FILE"
-
-echo ""
-echo "✅ Setup selesai! Proxy siap digunakan."
-echo "📄 Disimpan di: $HASIL_FILE"
-echo ""
-echo "[+] Detail Proxy:"
-echo "$HASIL"
+# Tampilkan URL Proxy yang bisa digunakan
+echo "✅ Selesai! Squid berjalan di port 3128 tanpa cache dan dengan file descriptor 65536."
+echo "URL proxy yang dapat digunakan:"
+echo "http://omyoh:cupubanget@$IP_ADDRESS:3128"
