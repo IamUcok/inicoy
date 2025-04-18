@@ -16,14 +16,6 @@ if [ -z "$PUBLIC_IP" ]; then
 fi
 echo "[+] IP publik yang didapat: $PUBLIC_IP"
 
-# === CARI IP DI INTERFACE LOKAL ===
-INTERFACE=$(ip -4 addr show | grep -B 1 "$PUBLIC_IP" | head -n 1 | awk '{print $2}' | sed 's/://')
-if [ -z "$INTERFACE" ]; then
-    echo "[!] Tidak dapat menemukan interface dengan IP $PUBLIC_IP."
-    exit 1
-fi
-echo "[+] IP publik $PUBLIC_IP ditemukan pada interface: $INTERFACE"
-
 # === INSTALL PAKET ===
 sudo apt update
 sudo apt install squid apache2-utils -y
@@ -96,14 +88,13 @@ if command -v ufw > /dev/null && sudo ufw status | grep -q "Status: active"; the
     sudo ufw allow $PORT/tcp comment "Allow Squid proxy port $PORT"
 fi
 
-# === SIMPAN HASIL ===
+# === SIMPAN DAN TAMPILKAN HASIL ===
 HASIL="http://$USERNAME:$PASSWORD@$PUBLIC_IP:$PORT"
 echo "$HASIL" > "$HASIL_FILE"
 
-# === OUTPUT KONFIGURASI PALING BAWAH ===
 echo ""
 echo "✅ Setup selesai! Proxy siap digunakan."
 echo "📄 Hasil disimpan di: $HASIL_FILE"
 echo ""
-echo "[+] Konfigurasi selesai. Berikut detail proxy kamu:"
+echo "[+] Berikut detail proxy kamu:"
 echo "$HASIL"
