@@ -3,12 +3,12 @@
 set -e
 
 echo "===> Membuat direktori konfigurasi..."
-mkdir -p ~/squid-docker/{conf,passwords}
+mkdir -p ~/squid-docker/{conf,passwords,logs}
 cd ~/squid-docker
 
 echo "===> Install apache2-utils, curl, dan docker-compose..."
 sudo apt update
-sudo apt install -y apache2-utils docker-compose curl
+sudo apt install -y apache2-utils docker-compose curl logrotate
 
 echo "===> Membuat user 'omyoh' dengan password 'cupubanget'..."
 htpasswd -cb passwords/squid_passwd omyoh cupubanget
@@ -62,6 +62,22 @@ services:
 
 volumes:
   squid-logs:
+EOF
+
+echo "===> Membuat konfigurasi logrotate untuk squid..."
+sudo cat <<EOF > /etc/logrotate.d/squid
+/var/log/squid/access.log {
+    hourly                 # Rotasi log setiap jam
+    missingok              # Tidak masalah jika file log hilang
+    rotate 5               # Simpan hanya 5 log terakhir (5 jam)
+    nocreate               # Jangan membuat file log baru (Squid sudah mengatur file lognya)
+    notifempty             # Jangan rotasi kalau file log kosong
+    sharedscripts          # Eksekusi script setelah rotasi selesai
+    postrotate
+        # Restart Squid setelah rotasi
+        /etc/init.d/squid reload > /dev/null
+    endscript
+}
 EOF
 
 echo "===> Menjalankan Squid proxy container..."
