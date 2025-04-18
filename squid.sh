@@ -44,6 +44,7 @@ http_access allow authenticated
 
 http_port $PORT
 #tcp_outgoing_address 43.133.43.25
+
 access_log /var/log/squid/access.log
 cache_log /var/log/squid/cache.log
 cache_store_log none
