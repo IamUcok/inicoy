@@ -90,6 +90,14 @@ loading_animation $!
 echo "Cek limit file descriptor Squid:"
 cat /proc/$(pidof squid)/limits | grep "Max open files"
 
+# === BUKA FIREWALL JIKA PERLU ===
+if command -v ufw > /dev/null && sudo ufw status | grep -q "Status: active"; then
+    echo "[+] Membuka port di firewall (UFW)"
+    for ((p=PORT_START; p<PORT_START+PORT_OFFSET; p++)); do
+        sudo ufw allow "$p/tcp" comment "Allow Squid proxy port $p"
+    done
+fi
+
 # === SIMPAN HASIL ===
 HASIL="http://$USERNAME:$PASSWORD@$PUBLIC_IP:$PORT"
 echo "$HASIL" > "$HASIL_FILE"
