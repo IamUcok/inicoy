@@ -146,3 +146,6 @@ install
 echo "### Installing myst & dependencies - done"
 
 echo "### Installation complete!"
+# Display public IP and myst url
+ip=$(dig -4 +short +tries=1 +timeout=2 myip.opendns.com @resolver1.opendns.com)
+[ -n "$ip" ] && echo "http://${ip}:4449"
