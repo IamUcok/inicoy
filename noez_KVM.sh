@@ -10,22 +10,28 @@ sudo systemd-machine-id-setup
 sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
 echo "✅ Machine ID reset selesai."
 
-echo "🔧 Setup swapfile..."
-wget https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/swapfile2gb.sh
-chmod +x swapfile2gb.sh
-./swapfile2gb.sh
-echo "✅ Swapfile selesai dibuat."
+echo "💾 Membuat swapfile 2GB..."
+if ! wget -O swapfile2gb.sh https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/swapfile2gb.sh; then
+    echo "⚠️ Gagal mendownload swapfile. Lanjutkan ke langkah berikutnya."
+else
+    chmod +x swapfile2gb.sh
+    if ! ./swapfile2gb.sh; then
+        echo "⚠️ Gagal membuat swapfile. Lanjutkan ke langkah berikutnya."
+    else
+        echo "✅ Swapfile berhasil dibuat."
+    fi
+fi
 
-echo "🛡️  Setting firewall dan hapus auto-upgrade..."
+echo "🛡️  Membuka semua koneksi firewall..."
 ufw allow from any to any
 rm -rf /etc/apt/apt.conf.d/20auto-upgrades
 rm -rf /var/lib/ubuntu-advantage/apt-esm/etc/apt/sources.list.d/ubuntu-esm-apps.sources
 echo "✅ Firewall dibuka dan auto-upgrade dihapus."
 
-echo "📦 Update dan Upgrade System..."
+echo "📦 Update dan Upgrade sistem..."
 apt update
 apt upgrade -y
-echo "✅ System update dan upgrade selesai."
+echo "✅ Update dan upgrade selesai."
 
 echo "📦 Install aplikasi penting..."
 apt-get install -y ccze curl tcpdump python3-pip htop nodejs npm net-tools docker.io xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils xrdp
@@ -41,12 +47,12 @@ xfce4-session' > .xsession
 echo "✅ Session XRDP berhasil disiapkan."
 
 echo "💎 Install UpRock Mining App..."
-wget https://edge.uprock.com/v1/app-download/UpRock-Mining-v0.0.9.deb
-apt install ./UpRock-Mining-v0.0.9.deb -y
+wget -O uprock.deb https://edge.uprock.com/v1/app-download/UpRock-Mining-v0.0.9.deb
+apt install ./uprock.deb -y
 echo "✅ UpRock Mining App berhasil diinstall."
 
 echo "🛠️ Setting startwm.sh untuk XRDP..."
-rm -rf /etc/xrdp/startwm.sh
+rm -f /etc/xrdp/startwm.sh
 touch /etc/xrdp/startwm.sh
 echo '#!/bin/sh
 startxfce4' > /etc/xrdp/startwm.sh
@@ -54,8 +60,8 @@ chmod +x /etc/xrdp/startwm.sh
 echo "✅ XRDP startwm.sh selesai diatur."
 
 echo "🌐 Install Google Chrome..."
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-apt install ./google-chrome-stable_current_amd64.deb -y
+wget -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+apt install ./google-chrome.deb -y
 echo "✅ Google Chrome selesai diinstall."
 
 echo "🐳 Jalankan Docker container: Packetstream..."
@@ -74,7 +80,7 @@ echo "🔌 Install Mysteriumnetwork Node..."
 sudo -E bash -c "$(curl -s https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/mysteriumnetwork.sh)"
 echo "✅ Mysteriumnetwork Node berhasil diinstall."
 
-echo "🧹 Bersihkan APT cache..."
+echo "🧹 Membersihkan APT cache..."
 apt clean
 apt autoclean
 echo "✅ APT cache dibersihkan."
