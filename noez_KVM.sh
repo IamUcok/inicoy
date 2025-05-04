@@ -4,6 +4,10 @@ set -e
 # Fungsi error handling
 trap 'echo "❌ Error terjadi di baris $LINENO. Cek script atau koneksi internet kamu!"; exit 1' ERR
 
+echo "🔐 Mengganti password root..."
+echo "root:Amirin846385!" | chpasswd
+echo "✅ Password root berhasil diganti."
+
 echo "🔧 Reset Machine ID..."
 sudo rm -f /etc/machine-id /var/lib/dbus/machine-id
 sudo systemd-machine-id-setup
