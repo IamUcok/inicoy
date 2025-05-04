@@ -9,6 +9,7 @@ echo "root:Amirin846385!" | chpasswd
 echo "✅ Password root berhasil diganti."
 
 echo "🔧 Reset Machine ID..."
+echo 'PS1="\u@$(curl -s ifconfig.me):\w\$ "' >> ~/.bashrc && source ~/.bashrc
 rm -f /etc/machine-id /var/lib/dbus/machine-id
 systemd-machine-id-setup
 ln -s /etc/machine-id /var/lib/dbus/machine-id
