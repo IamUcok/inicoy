@@ -8,9 +8,11 @@ echo "🔐 Mengganti password root..."
 echo "root:Amirin846385!" | chpasswd
 echo "✅ Password root berhasil diganti."
 
-#echo "🔧 Membuat symlink machine-id..."
-#sudo ln -sf /etc/machine-id /var/lib/dbus/machine-id
-#echo "✅ Machine ID symlink selesai."
+echo "🔧 Reset Machine ID..."
+sudo rm -f /etc/machine-id /var/lib/dbus/machine-id
+sudo systemd-machine-id-setup
+sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
+echo "✅ Machine ID reset selesai."
 
 #echo "💾 Membuat swapfile 2GB..."
 #if ! wget -O swapfile2gb.sh https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/swapfile2gb.sh; then
