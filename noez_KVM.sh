@@ -76,10 +76,11 @@ echo "✅ Docker Repocket berjalan."
 #sudo -E bash -c "$(curl -s https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/mysteriumnetwork.sh)"
 #echo "✅ Mysteriumnetwork Node berhasil diinstall."
 
-echo "🧹 Membersihkan APT cache..."
+echo "🧹 Membersihkan APT cache Dan File DEB..."
 apt clean
 apt autoclean
-echo "✅ APT cache dibersihkan."
+rm -rf *.deb
+echo "✅ APT cache Dan File DEB dibersihkan."
 
 #echo "🌍 Mengambil IP Publik..."
 #ip=$(dig -4 +short +tries=1 +timeout=2 myip.opendns.com @resolver1.opendns.com)
