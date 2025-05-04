@@ -22,11 +22,11 @@ else
     fi
 fi
 
-echo "🛡️  Membuka semua koneksi firewall..."
-ufw allow from any to any
-rm -rf /etc/apt/apt.conf.d/20auto-upgrades
-rm -rf /var/lib/ubuntu-advantage/apt-esm/etc/apt/sources.list.d/ubuntu-esm-apps.sources
-echo "✅ Firewall dibuka dan auto-upgrade dihapus."
+#echo "🛡️  Membuka semua koneksi firewall..."
+#ufw allow from any to any
+#rm -rf /etc/apt/apt.conf.d/20auto-upgrades
+#rm -rf /var/lib/ubuntu-advantage/apt-esm/etc/apt/sources.list.d/ubuntu-esm-apps.sources
+#echo "✅ Firewall dibuka dan auto-upgrade dihapus."
 
 echo "📦 Update dan Upgrade sistem..."
 apt update
@@ -72,23 +72,23 @@ echo "🐳 Jalankan Docker container: Repocket..."
 docker run --name Repocket -e RP_EMAIL=iamspa@gmail.com -e RP_API_KEY=dfb2468d-bc6d-4474-a5cd-eb2b0a876a93 -d --restart=always repocket/repocket
 echo "✅ Docker Repocket berjalan."
 
-echo "🔌 Install Mysteriumnetwork Node..."
-sudo -E bash -c "$(curl -s https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/mysteriumnetwork.sh)"
-echo "✅ Mysteriumnetwork Node berhasil diinstall."
+#echo "🔌 Install Mysteriumnetwork Node..."
+#sudo -E bash -c "$(curl -s https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/mysteriumnetwork.sh)"
+#echo "✅ Mysteriumnetwork Node berhasil diinstall."
 
 echo "🧹 Membersihkan APT cache..."
 apt clean
 apt autoclean
 echo "✅ APT cache dibersihkan."
 
-echo "🌍 Mengambil IP Publik..."
-ip=$(dig -4 +short +tries=1 +timeout=2 myip.opendns.com @resolver1.opendns.com)
+#echo "🌍 Mengambil IP Publik..."
+#ip=$(dig -4 +short +tries=1 +timeout=2 myip.opendns.com @resolver1.opendns.com)
 
-if [ -n "$ip" ]; then
-    echo "✅ Setup selesai! Akses server kamu di: http://${ip}:4449"
-else
-    echo "⚠️  Tidak bisa mendapatkan IP Publik."
-fi
+#if [ -n "$ip" ]; then
+#    echo "✅ Setup selesai! Akses server kamu di: http://${ip}:4449"
+#else
+#    echo "⚠️  Tidak bisa mendapatkan IP Publik."
+#fi
 
 echo "🐳 Jalankan Docker container: Traffmonetizer..."
 docker run -i --name Traffmonetizer --restart=always traffmonetizer/cli_v2:latest start accept --token f9kaSMNVm5vuSVSXVwgN8YXPjNLiiSEmBy9Ro2PICms=
