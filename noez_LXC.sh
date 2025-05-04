@@ -39,7 +39,7 @@ apt update
 echo "✅ Update dan upgrade selesai."
 
 echo "📦 Install aplikasi tambahan...python3-pip npm docker.io "
-apt-get install -y ccze curl tcpdump htop nodejs net-tools xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils xrdp
+apt-get install -y ccze curl tcpdump sudo htop nodejs net-tools xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils xrdp
 apt autoremove -y
 echo "✅ Aplikasi tambahan terinstall."
 
