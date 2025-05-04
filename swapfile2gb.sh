@@ -2,7 +2,7 @@
 
 SWAP1="/swapfile"
 SWAP2="/swapfile2"
-TARGET_MB=4096
+TARGET_MB=3072
 
 # Hitung total swap aktif saat ini
 TOTAL_MB=$(swapon --show=SIZE --noheadings | awk '{sum+=$1} END {print int(sum)}')
