@@ -41,7 +41,6 @@ echo "✅ Update dan upgrade selesai."
 
 echo "📦 Install aplikasi penting...python3-pip npm "
 apt-get install -y ccze curl tcpdump sudo htop nodejs net-tools xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils xrdp
-apt autoremove -y
 echo "✅ Semua aplikasi penting sudah diinstall."
 
 echo "🖥️ Setup session XRDP..."
@@ -83,6 +82,8 @@ echo "✅ Docker Repocket berjalan."
 #echo "✅ Mysteriumnetwork Node berhasil diinstall."
 
 echo "🧹 Membersihkan APT cache Dan File DEB..."
+apt remove xfce4-power-manager -y
+apt autoremove -y
 apt clean
 apt autoclean
 rm -rf *.deb *.sh
