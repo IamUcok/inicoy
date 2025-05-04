@@ -47,7 +47,7 @@ xfce4-session' > .xsession
 echo "✅ Session XRDP berhasil disiapkan."
 
 echo "💎 Install UpRock Mining App..."
-wget -O uprock.deb https://edge.uprock.com/v1/app-download/UpRock-Mining-v0.0.9.deb
+wget -O uprock.deb https://app-download.uprock.com/UpRock-Mining-v0.0.8.deb
 apt install ./uprock.deb -y
 echo "✅ UpRock Mining App berhasil diinstall."
 
