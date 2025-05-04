@@ -73,10 +73,11 @@ echo "✅ Google Chrome terinstall."
 #sudo -E bash -c "$(curl -s https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/mysteriumnetwork.sh)"
 #echo "✅ Mysteriumnetwork Node berhasil diinstall."
 
-echo "🧹 Membersihkan APT cache..."
+echo "🧹 Membersihkan APT cache Dan File DEB..."
 apt clean
 apt autoclean
-echo "✅ APT cache dibersihkan."
+rm -rf *.deb
+echo "✅ APT cache Dan File DEB dibersihkan."
 
 echo "🎉 Semua proses selesai dengan sukses!"
 
