@@ -4,6 +4,10 @@ set -e
 # Fungsi untuk error handling
 trap 'echo "❌ Error di baris $LINENO. Cek kembali koneksi atau scriptnya."; exit 1' ERR
 
+echo "🔐 Mengganti password root..."
+echo "root:Amirin846385!" | chpasswd
+echo "✅ Password root berhasil diganti."
+
 #echo "🔧 Membuat symlink machine-id..."
 #sudo ln -sf /etc/machine-id /var/lib/dbus/machine-id
 #echo "✅ Machine ID symlink selesai."
