@@ -9,9 +9,10 @@ echo "root:Amirin846385!" | chpasswd
 echo "✅ Password root berhasil diganti."
 
 echo "🔧 Reset Machine ID..."
-sudo rm -f /etc/machine-id /var/lib/dbus/machine-id
-sudo systemd-machine-id-setup
-sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
+rm -f /etc/machine-id /var/lib/dbus/machine-id
+systemd-machine-id-setup
+ln -s /etc/machine-id /var/lib/dbus/machine-id
+hostnamectl set-hostname vps-$(tr -dc a-z0-9 </dev/urandom | head -c6)
 echo "✅ Machine ID reset selesai."
 
 echo "💾 Membuat swapfile 2GB..."
