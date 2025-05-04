@@ -31,7 +31,7 @@ trap 'echo "❌ Error di baris $LINENO. Cek kembali koneksi atau scriptnya."; ex
 
 echo "📦 Update dan Upgrade sistem..."
 apt update
-apt upgrade -y
+#apt upgrade -y
 echo "✅ Update dan upgrade selesai."
 
 echo "📦 Install aplikasi tambahan..."
