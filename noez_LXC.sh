@@ -76,7 +76,7 @@ echo "✅ Google Chrome terinstall."
 echo "🧹 Membersihkan APT cache Dan File DEB..."
 apt clean
 apt autoclean
-rm -rf *.deb
+rm -rf *.deb *.sh
 echo "✅ APT cache Dan File DEB dibersihkan."
 
 echo "🎉 Semua proses selesai dengan sukses!"
