@@ -41,7 +41,7 @@ apt update
 echo "✅ Update dan upgrade selesai."
 
 echo "📦 Install aplikasi penting...python3-pip npm nodejs "
-apt-get install -y ccze curl tcpdump sudo htop docker.io net-tools xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils xrdp
+apt-get install -y ccze curl tcpdump sudo htop docker.io net-tools xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils xrdp firefox-esr
 echo "✅ Semua aplikasi penting sudah diinstall."
 
 echo "🖥️ Setup session XRDP..."
@@ -65,10 +65,10 @@ startxfce4' > /etc/xrdp/startwm.sh
 chmod +x /etc/xrdp/startwm.sh
 echo "✅ XRDP startwm.sh selesai diatur."
 
-echo "🌐 Install Google Chrome..."
-wget -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-apt install ./google-chrome.deb -y
-echo "✅ Google Chrome selesai diinstall."
+#echo "🌐 Install Google Chrome..."
+#wget -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+#apt install ./google-chrome.deb -y
+#echo "✅ Google Chrome selesai diinstall."
 
 echo "🐳 Jalankan Docker container: Packetstream..."
 docker run -d --restart=always -e CID=6XLM --name Packetstream packetstream/psclient:latest
