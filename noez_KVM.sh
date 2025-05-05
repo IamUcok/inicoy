@@ -35,6 +35,7 @@ fi
 #echo "✅ Firewall dibuka dan auto-upgrade dihapus."
 
 echo "📦 Update dan Upgrade sistem..."
+apt autoremove unattended-upgrades -y
 apt update
 #apt upgrade -y
 echo "✅ Update dan upgrade selesai."
@@ -83,7 +84,7 @@ echo "✅ Docker Repocket berjalan."
 
 echo "🧹 Membersihkan APT cache Dan File DEB..."
 apt remove xfce4-power-manager -y
-apt autoremove unattended-upgrades -y
+apt autoremove -y
 apt clean
 apt autoclean
 rm -rf *.deb *.sh
