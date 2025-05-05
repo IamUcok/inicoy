@@ -82,6 +82,11 @@ echo "✅ Docker Repocket berjalan."
 #sudo -E bash -c "$(curl -s https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/mysteriumnetwork.sh)"
 #echo "✅ Mysteriumnetwork Node berhasil diinstall."
 
+echo "💎 Download HTOP Config File..."
+mkdir /root/.config/htop
+wget -O /root/.config/htop/htoprc https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/htoprc
+echo "✅ Download HTOP Config File Selesai."
+
 echo "🧹 Membersihkan APT cache Dan File DEB..."
 apt remove xfce4-power-manager -y
 apt autoremove -y
