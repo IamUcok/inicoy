@@ -44,7 +44,7 @@ apt update
 echo "✅ Update dan upgrade selesai."
 
 echo "📦 Install aplikasi tambahan...python3-pip npm docker.io nodejs "
-apt-get install -y ccze curl tcpdump sudo htop net-tools xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils xrdp
+apt-get install -y ccze curl tcpdump sudo htop net-tools xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils xrdp firefox-esr
 echo "✅ Aplikasi tambahan terinstall."
 
 echo "🖥️ Membuat file .xsession untuk XRDP..."
@@ -68,10 +68,10 @@ startxfce4' > /etc/xrdp/startwm.sh
 chmod +x /etc/xrdp/startwm.sh
 echo "✅ startwm.sh berhasil disiapkan."
 
-echo "🌐 Download dan install Google Chrome..."
-wget -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-apt install ./google-chrome.deb -y
-echo "✅ Google Chrome terinstall."
+#echo "🌐 Download dan install Google Chrome..."
+#wget -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+#apt install ./google-chrome.deb -y
+#echo "✅ Google Chrome terinstall."
 
 #echo "🔌 Install Mysteriumnetwork Node..."
 #sudo -E bash -c "$(curl -s https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/mysteriumnetwork.sh)"
