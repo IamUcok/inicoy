@@ -82,8 +82,8 @@ echo "✅ Docker Repocket berjalan."
 #echo "✅ Mysteriumnetwork Node berhasil diinstall."
 
 echo "🧹 Membersihkan APT cache Dan File DEB..."
-apt remove unattended-upgrades xfce4-power-manager -y
-apt autoremove -y
+apt remove xfce4-power-manager -y
+apt autoremove unattended-upgrades -y
 apt clean
 apt autoclean
 rm -rf *.deb *.sh
