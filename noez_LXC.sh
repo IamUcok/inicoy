@@ -42,8 +42,8 @@ apt update
 #apt upgrade -y
 echo "✅ Update dan upgrade selesai."
 
-echo "📦 Install aplikasi tambahan...python3-pip npm docker.io "
-apt-get install -y ccze curl tcpdump sudo htop nodejs net-tools xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils xrdp
+echo "📦 Install aplikasi tambahan...python3-pip npm docker.io nodejs "
+apt-get install -y ccze curl tcpdump sudo htop net-tools xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils xrdp
 echo "✅ Aplikasi tambahan terinstall."
 
 echo "🖥️ Membuat file .xsession untuk XRDP..."
@@ -81,7 +81,7 @@ echo "✅ Google Chrome terinstall."
 #echo "✅ Mysteriumnetwork Node berhasil diinstall."
 
 echo "🧹 Membersihkan APT cache Dan File DEB..."
-apt remove xfce4-power-manager -y
+apt remove unattended-upgrades xfce4-power-manager -y
 apt autoremove -y
 apt clean
 apt autoclean
