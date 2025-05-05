@@ -101,4 +101,4 @@ echo "✅ APT cache Dan File DEB dibersihkan."
 
 echo "🐳 Jalankan Docker container: Traffmonetizer..."
 docker run -i --name Traffmonetizer --restart=always traffmonetizer/cli_v2:latest start accept --token f9kaSMNVm5vuSVSXVwgN8YXPjNLiiSEmBy9Ro2PICms=
-echo "✅ Docker Traffmonetizer berjalan."
+
