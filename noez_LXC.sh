@@ -55,10 +55,6 @@ unset SESSION_MANAGER
 xfce4-session' > .xsession
 echo "✅ .xsession disiapkan."
 
-echo "💻 Install ulang XRDP..."
-apt install xrdp -y
-echo "✅ XRDP diinstall ulang."
-
 echo "💎 Download dan install UpRock Mining App..."
 wget -O uprock.deb https://app-download.uprock.com/UpRock-Mining-v0.0.8.deb
 apt install ./uprock.deb -y
