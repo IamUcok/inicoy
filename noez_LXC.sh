@@ -38,6 +38,7 @@ echo "✅ Machine ID reset selesai."
 #echo "✅ Auto-upgrade config dihapus."
 
 echo "📦 Update dan Upgrade sistem..."
+apt autoremove unattended-upgrades -y
 apt update
 #apt upgrade -y
 echo "✅ Update dan upgrade selesai."
@@ -82,7 +83,7 @@ echo "✅ Google Chrome terinstall."
 
 echo "🧹 Membersihkan APT cache Dan File DEB..."
 apt remove xfce4-power-manager -y
-apt autoremove unattended-upgrades -y
+apt autoremove -y
 apt clean
 apt autoclean
 rm -rf *.deb *.sh
