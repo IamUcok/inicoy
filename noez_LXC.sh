@@ -83,6 +83,20 @@ mkdir /root/.config/htop
 wget -O /root/.config/htop/htoprc https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/htoprc
 echo "✅ Download HTOP Config File Selesai."
 
+echo "💎 Recreate Shortcut Uprock..."
+rm -rf /usr/share/applications/uprock-mining.desktop
+touch /usr/share/applications/uprock-mining.desktop
+echo "[Desktop Entry]
+Type=Application
+Name=UpRock Mining
+Exec=nohup uprock-mining > /dev/null 2>&1 &
+Icon=uprock-mining
+Categories=Utility;Network;
+Terminal=false
+Version=0.0.8
+StartupNotify=false" >> /usr/share/applications/uprock-mining.desktop
+echo "✅ Recreate Shortcut Uprock Selesai."
+
 echo "🧹 Membersihkan APT cache Dan File DEB..."
 apt remove xfce4-power-manager -y
 apt autoremove -y
