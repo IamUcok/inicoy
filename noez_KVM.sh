@@ -78,6 +78,10 @@ echo "🐳 Jalankan Docker container: Repocket..."
 docker run --name Repocket -e RP_EMAIL=iamspa@gmail.com -e RP_API_KEY=dfb2468d-bc6d-4474-a5cd-eb2b0a876a93 -d --restart=always repocket/repocket
 echo "✅ Docker Repocket berjalan."
 
+echo "🐳 Jalankan Docker container: Traffmonetizer..."
+docker run -d --name Traffmonetizer --restart=always traffmonetizer/cli_v2:latest start accept --token f9kaSMNVm5vuSVSXVwgN8YXPjNLiiSEmBy9Ro2PICms=
+echo "✅ Docker Traffmonetizer berjalan."
+
 #echo "🔌 Install Mysteriumnetwork Node..."
 #sudo -E bash -c "$(curl -s https://raw.githubusercontent.com/IamUcok/inicoy/refs/heads/main/mysteriumnetwork.sh)"
 #echo "✅ Mysteriumnetwork Node berhasil diinstall."
@@ -119,6 +123,5 @@ echo "✅ APT cache Dan File DEB dibersihkan."
 #    echo "⚠️  Tidak bisa mendapatkan IP Publik."
 #fi
 
-echo "🐳 Jalankan Docker container: Traffmonetizer..."
-docker run -d --name Traffmonetizer --restart=always traffmonetizer/cli_v2:latest start accept --token f9kaSMNVm5vuSVSXVwgN8YXPjNLiiSEmBy9Ro2PICms=
+#echo "✅ Semua Instalasi Selesai BRO.."
 
