@@ -123,5 +123,5 @@ echo "✅ APT cache Dan File DEB dibersihkan."
 #    echo "⚠️  Tidak bisa mendapatkan IP Publik."
 #fi
 
-echo "✅ Semua Instalasi Selesai BRO.."
+echo "🎉 Semua Proses Selesai Dengan Sukses!"
 
