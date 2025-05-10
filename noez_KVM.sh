@@ -70,9 +70,9 @@ echo "✅ XRDP startwm.sh selesai diatur."
 #apt install ./google-chrome.deb -y
 #echo "✅ Google Chrome selesai diinstall."
 
-echo "🐳 Jalankan Docker container: Packetstream..."
-docker run -d --restart=always -e CID=6XLM --name Packetstream packetstream/psclient:latest
-echo "✅ Docker Packetstream berjalan."
+#echo "🐳 Jalankan Docker container: Packetstream..."
+#docker run -d --restart=always -e CID=6XLM --name Packetstream packetstream/psclient:latest
+#echo "✅ Docker Packetstream berjalan."
 
 echo "🐳 Jalankan Docker container: Repocket..."
 docker run --name Repocket -e RP_EMAIL=iamspa@gmail.com -e RP_API_KEY=dfb2468d-bc6d-4474-a5cd-eb2b0a876a93 -d --restart=always repocket/repocket
